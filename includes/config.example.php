@@ -1,14 +1,14 @@
 ﻿<?php
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'klinikcms');
-define('DB_USER', 'root');
+define('DB_HOST', '');
+define('DB_NAME', '');
+define('DB_USER', '');
 define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+define('DB_CHARSET', '');
 
-define('SITE_URL', 'http://localhost/klinikcms');
+define('SITE_URL', '');
 
-define('UPLOAD_PATH', __DIR__ . '/../uploads/');
-define('UPLOAD_URL', SITE_URL . '/uploads/');
+define('UPLOAD_PATH', __DIR__ . '/..//');
+define('UPLOAD_URL', SITE_URL . '//');
 
-define('ADMIN_SESSION_NAME', 'klinik_admin');
+define('ADMIN_SESSION_NAME', '');
