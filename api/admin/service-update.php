@@ -5,22 +5,71 @@ require_once __DIR__ . '/../../includes/functions.php';
 
 $pdo = getDB();
 
-$id = $_POST['id'] ?? null;
+$id = (int)($_POST['id'] ?? 0);
 $title = clean($_POST['title'] ?? '');
-$description = clean($_POST['description'] ?? '');
+$short_desc = clean($_POST['short_desc'] ?? '');
+$content = clean($_POST['content'] ?? '');
+$is_active = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 1;
 
+/*
+====================
+VALIDATION
+====================
+*/
 if (!$id || !$title) {
     jsonError("Eksik veri");
 }
 
 $slug = toSlug($title);
 
-$stmt = $pdo->prepare("
+/*
+====================
+IMAGE (optional update)
+====================
+*/
+$image_path = null;
+
+if (!empty($_FILES['image']['name'])) {
+    $upload = uploadImage($_FILES['image'], 'services');
+
+    if (!$upload) {
+        jsonError("Görsel yüklenemedi");
+    }
+
+    $image_path = $upload;
+}
+
+/*
+====================
+BUILD QUERY
+====================
+*/
+$sql = "
     UPDATE services
-    SET title=?, description=?, slug=?
-    WHERE id=?
-");
+    SET title = :title,
+        short_desc = :short_desc,
+        content = :content,
+        slug = :slug,
+        is_active = :is_active
+";
 
-$stmt->execute([$title, $description, $slug, $id]);
+$params = [
+    ':title' => $title,
+    ':short_desc' => $short_desc,
+    ':content' => $content,
+    ':slug' => $slug,
+    ':is_active' => $is_active,
+    ':id' => $id
+];
 
-jsonSuccess(null, "Güncellendi");
+if ($image_path) {
+    $sql .= ", image_path = :image_path";
+    $params[':image_path'] = $image_path;
+}
+
+$sql .= " WHERE id = :id";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+
+jsonSuccess(null, "Hizmet güncellendi");

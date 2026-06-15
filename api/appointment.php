@@ -6,32 +6,31 @@ require_once __DIR__ . '/../includes/functions.php';
 
 $pdo = getDB();
 
-// sadece POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Sadece POST desteklenir", 405);
 }
 
-// inputlar
-$full_name = clean($_POST['full_name'] ?? '');
-$phone     = clean($_POST['phone'] ?? '');
-$email     = clean($_POST['email'] ?? '');
+// INPUTS
+$full_name  = clean($_POST['full_name'] ?? '');
+$phone      = clean($_POST['phone'] ?? '');
+$email      = clean($_POST['email'] ?? '');
 $service_id = $_POST['service_id'] ?? null;
-$date      = $_POST['date'] ?? null;
-$time      = $_POST['time'] ?? null;
-$message   = clean($_POST['message'] ?? '');
 
-// validation
-if (!$full_name || !$phone || !$service_id || !$date || !$time) {
+$appointment_date = $_POST['date'] ?? null;
+$appointment_time = $_POST['time'] ?? null;
+
+$message = clean($_POST['message'] ?? '');
+
+// VALIDATION
+if (!$full_name || !$phone || !$service_id || !$appointment_date || !$appointment_time) {
     jsonError("Zorunlu alanlar eksik");
 }
 
-// telefon basic kontrol
 if (strlen($phone) < 10) {
     jsonError("Telefon geçersiz");
 }
 
-// tarih geçmiş mi kontrol (basit)
-if (strtotime($date) < strtotime(date("Y-m-d"))) {
+if (strtotime($appointment_date) < strtotime(date("Y-m-d"))) {
     jsonError("Geçmiş tarih seçilemez");
 }
 
@@ -39,9 +38,31 @@ try {
 
     $stmt = $pdo->prepare("
         INSERT INTO appointments
-        (full_name, phone, email, service_id, date, time, message, status, created_at)
+        (
+            full_name,
+            phone,
+            email,
+            service_id,
+            appointment_date,
+            appointment_time,
+            message,
+            status,
+            ip_address,
+            created_at
+        )
         VALUES
-        (:full_name, :phone, :email, :service_id, :date, :time, :message, 'pending', NOW())
+        (
+            :full_name,
+            :phone,
+            :email,
+            :service_id,
+            :appointment_date,
+            :appointment_time,
+            :message,
+            'pending',
+            :ip_address,
+            NOW()
+        )
     ");
 
     $stmt->execute([
@@ -49,9 +70,10 @@ try {
         ':phone' => $phone,
         ':email' => $email,
         ':service_id' => $service_id,
-        ':date' => $date,
-        ':time' => $time,
-        ':message' => $message
+        ':appointment_date' => $appointment_date,
+        ':appointment_time' => $appointment_time,
+        ':message' => $message,
+        ':ip_address' => $_SERVER['REMOTE_ADDR'] ?? null
     ]);
 
     jsonSuccess(null, "Randevu oluşturuldu");

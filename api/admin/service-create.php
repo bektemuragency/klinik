@@ -5,20 +5,77 @@ require_once __DIR__ . '/../../includes/functions.php';
 
 $pdo = getDB();
 
+/*
+========================
+INPUTS
+========================
+*/
 $title = clean($_POST['title'] ?? '');
-$description = clean($_POST['description'] ?? '');
+$short_desc = clean($_POST['short_desc'] ?? '');
+$content = clean($_POST['content'] ?? '');
+$is_active = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 1;
 
+/*
+========================
+VALIDATION
+========================
+*/
 if (!$title) {
     jsonError("Başlık zorunlu");
 }
 
+/*
+========================
+SLUG
+========================
+*/
 $slug = toSlug($title);
 
+/*
+========================
+AUTO SORT ORDER
+========================
+*/
+$stmt = $pdo->query("SELECT MAX(sort_order) FROM services");
+$sort_order = (int)$stmt->fetchColumn() + 1;
+
+/*
+========================
+IMAGE UPLOAD
+========================
+*/
+$image_path = null;
+
+if (!empty($_FILES['image']['name'])) {
+    $upload = uploadImage($_FILES['image'], 'services');
+
+    if (!$upload) {
+        jsonError("Görsel yüklenemedi");
+    }
+
+    $image_path = $upload;
+}
+
+/*
+========================
+INSERT
+========================
+*/
 $stmt = $pdo->prepare("
-    INSERT INTO services (title, description, slug, created_at)
-    VALUES (?, ?, ?, NOW())
+    INSERT INTO services
+    (title, short_desc, content, slug, image_path, is_active, sort_order, created_at)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, NOW())
 ");
 
-$stmt->execute([$title, $description, $slug]);
+$stmt->execute([
+    $title,
+    $short_desc,
+    $content,
+    $slug,
+    $image_path,
+    $is_active,
+    $sort_order
+]);
 
-jsonSuccess(null, "Hizmet eklendi");
+jsonSuccess(null, "Hizmet başarıyla eklendi");

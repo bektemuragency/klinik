@@ -1,4 +1,5 @@
 ﻿<?php
+
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 
@@ -29,9 +30,20 @@ if (isset($_GET['stats'])) {
 LIST MODE
 ========================
 */
-
 $stmt = $pdo->query("
-    SELECT * FROM appointments
+    SELECT 
+        id,
+        full_name,
+        phone,
+        email,
+        service_id,
+        appointment_date,
+        appointment_time,
+        status,
+        admin_note,
+        created_at,
+        updated_at
+    FROM appointments
     ORDER BY id DESC
 ");
 
