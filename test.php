@@ -24,6 +24,11 @@ try {
 
 } catch (Exception $e) {
     echo $e->getMessage();
+<<<<<<< HEAD
 }
 =======
 >>>>>>> 7cc9c7bd4dde6fc750f54c05e45af935962253e7
+=======
+    
+}
+>>>>>>> b454f6054a70a6d66366b90ba25b21a61aef224b
