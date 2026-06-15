@@ -15,16 +15,7 @@ $settings = $data['settings'];
 $services = $data['services'];
 ?>
 
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $pageTitle ?> - <?= $settings['clinic_name'] ?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-slate-50 text-slate-800 antialiased">
+<?php include __DIR__ . '/header.php'; ?>
 
 <section class="relative bg-gradient-to-br from-teal-700 to-teal-900 text-white py-20 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
@@ -85,3 +76,4 @@ $services = $data['services'];
                 </div>
 
                 <div class="md:col-span-2">
+                    <?php include __DIR__ . '/footer.php'; ?>

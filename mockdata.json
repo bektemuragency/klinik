@@ -21,13 +21,13 @@
       "Cumartesi": "10:00 - 15:00",
       "Pazar": "Kapalı"
     },
-    "google_maps_embed": "https://maps.google.com"
+    "google_maps_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3007.472101569106!2d29.0068478!3d41.0794503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab63f03b8764f%3A0x6b86fb35d0e2e28!2sLevent%2C%20B%C3%BCy%C3%BCkdere%20Cd.%20No%3A45%2C%20Be%C5%9Fikta%C5%9F%20%C4%B0stanbul!"
   },
 
   "hero": {
     "title": "Sağlıklı ve Estetik Gülüşler İçin Modern Diş Hekimliği",
     "subtitle": "İmplant tedavisinden estetik uygulamalara, ortodontiden çocuk diş sağlığına kadar geniş kapsamlı hizmetlerimizle yanınızdayız.",
-    "image": "assets/images/hero.jpg"
+    "image": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80"
   },
 
   "statistics": {
@@ -37,60 +37,79 @@
     "expert_doctors": 8
   },
 
+  "why_us": [
+    {
+      "title": "İleri Teknoloji",
+      "description": "3D ağız içi tarayıcılar ve dijital planlama üniteleri ile hatasız tedaviler."
+    },
+    {
+      "title": "Uzman Kadro",
+      "description": "Alanında akademik başarılara ve yüksek deneyime sahip hekim kadrosu."
+    },
+    {
+      "title": "Ağrısız Süreç",
+      "description": "Yeni nesil lokal anestezi teknikleriyle tamamen konforlu operasyonlar."
+    },
+    {
+      "title": "%100 Sterilizasyon",
+      "description": "Uluslararası standartlarda tam otomatize dezenfeksiyon ve hijyen zinciri."
+    }
+  ],
+
   "services": [
     {
       "id": 1,
       "title": "İmplant Tedavisi",
       "slug": "implant-tedavisi",
       "short_desc": "Eksik dişler için kalıcı, estetik ve doğal çözümler.",
-      "image_url": "assets/images/services/implant.jpg",
+      "image_url": "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=800&q=80",
       "sort_order": 1,
-      "content": "<h2>İmplant Tedavisi</h2><p>Eksik dişlerin fonksiyonel ve estetik olarak yeniden kazandırılmasını sağlayan modern bir uygulamadır. Çene kemiğine yerleştirilen titanyum implantlar sayesinde doğal diş görünümü ve konforlu kullanım elde edilir..</p>"
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>Eksik dişlerin fonksiyonel ve estetik olarak yeniden kazandırılmasını sağlayan modern implant uygulamalarıyla, yaşam kalitenizi eski günlerine döndürüyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>İmplant Tedavisi Nedir?</h3><p class='mb-4 text-slate-600 leading-relaxed'>İmplant tedavisi, çeşitli nedenlerle kaybedilen dişlerin yerine, çene kemiğine yerleştirilen ve titanyumdan üretilen yapay diş kökleridir. Bu köklerin üzerine yerleştirilen protezler, hastaya kendi doğal dişiyle çiğniyormuş hissi verir ve estetik açıdan kusursuz bir görünüm sunar.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Tedavi Süreci Nasıl İlerler?</h3><ul class='list-disc pl-6 mb-6 text-slate-600 space-y-2'><li><strong>Detaylı Muayene ve Planlama:</strong> İlk seansımızda 3D çene ve diş tomografisi çekilerek kemik yapınız detaylıca analiz edilir.</li><li><strong>Operasyon Aşaması:</strong> Lokal anestezi altında, tamamen ağrısız ve konforlu bir şekilde titanyum vidalar çene kemiğine yerleştirilir.</li><li><strong>İyileşme Dönemi (Osseointegrasyon):</strong> İmplantın kemikle tamamen kaynaşması için ortalama 2 ila 4 ay arasında bir bekleme süreci öngörülür.</li><li><strong>Protez Diş Yapımı:</strong> Kaynaşma sürecinin ardından kişiye özel tasarlanan zirkonyum veya porselen dişleriniz implant üzerine takılarak tedavi tamamlanır.</li></ul><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Neden İmplant Tedavisi Olmalısınız?</h3><p class='text-slate-600 leading-relaxed'>Geleneksel köprü tedavilerinin aksine, implant uygulamasında komşu sağlam dişlerinize hiçbir şekilde dokunulmaz ve tıraşlama yapılmaz. Çiğneme fonksiyonunuz tam gücüne kavuşurken, yüz hatlarınızda diş eksikliğine bağlı oluşabilecek çökmelerin de önüne geçilmiş olur.</p>"
     },
     {
       "id": 2,
       "title": "Ortodonti",
       "slug": "ortodonti",
       "short_desc": "Şeffaf plak ve tel tedavileriyle düzgün dişler.",
-      "image_url": "assets/images/services/ortodonti.jpg",
+      "image_url": "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=800&q=80",
       "sort_order": 2,
-      "content": "<h2>Ortodonti</h2><p>Ortodonti tedavileri, çapraşık dişlerin ve çene bozukluklarının düzeltilmesini sağlar. Şeffaf plak ve modern tel sistemleriyle daha estetik ve sağlıklı bir gülüş hedeflenir.</p>"
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>Çapraşık diş ilişkilerini ve çene dengesizliklerini modern ortodonti yöntemleriyle düzelterek, ideal bir kapanış ve simetrik bir gülüş sağlıyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Ortodonti Tedavisi Seçenekleri</h3><p class='mb-4 text-slate-600 leading-relaxed'>Kliniğimizde hem çocuklara hem de yetişkin hastalara yönelik geniş yelpazede ortodontik çözümler sunuyoruz. Diş yapınızın durumuna ve estetik beklentilerinize göre şu yöntemler tercih edilmektedir:</p><ul class='list-disc pl-6 mb-6 text-slate-600 space-y-2'><li><strong>Telsiz Ortodonti (Şeffaf Plaklar):</strong> Dışarıdan bakıldığında neredeyse tamamen görünmez olan Invisalign ve benzeri şeffaf plaklar yardımıyla, sosyal yaşamınız etkilenmeden dişleriniz hizalanır. Plaklar yemek yerken kolayca çıkarılabilir.</li><li><strong>Porselen (Estetik) Braketler:</strong> Diş rengine uyumlu seramik malzemeden üretilen bu teller, metal tellere kıyasla çok daha estetik ve kamufle bir görünüm sunar.</li><li><strong>Geleneksel Metal Teller:</strong> İleri derece çapraşıklıklarda ve çene bozukluklarında yüksek başarı oranı sunan, en dayanıklı ve yaygın tedavi yöntemidir.</li></ul><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Tedavi Süresi Ne Kadardır?</h3><p class='text-slate-600 leading-relaxed'>Ortodontik tedavilerin süresi tamamen kişinin ağız yapısına, çapraşıklık derecesine ve seçilen yönteme göre değişiklik gösterir. Hafif vakalar şeffaf plaklarla 6-8 ay içinde çözülebilirken, kapsamlı tel tedavileri 12 ila 24 ay arasında sürebilmektedir. Tedavi süresince her ay düzenli kontrollerle ilerleme takip edilir.</p>"
     },
     {
       "id": 3,
       "title": "Diş Beyazlatma",
       "slug": "dis-beyazlatma",
       "short_desc": "Daha beyaz ve daha parlak gülüşler.",
-      "image_url": "assets/images/services/beyazlatma.jpg",
+      "image_url": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80",
       "sort_order": 3,
-      "content": "<h2>Diş Beyazlatma</h2><p></p>Profesyonel beyazlatma uygulamaları sayesinde dişlerde oluşan renklenmeler giderilir, daha canlı ve estetik bir görünüm elde edilir."
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>Zamanla kahve, çay, tütün kullanımı veya yaş almaya bağlı olarak sararan dişlerinizi, klinik ortamında güvenli sistemlerle beyazlatıyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Profesyonel Diş Beyazlatma (Bleaching) Nedir?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Diş beyazlatma, dişlerin mine ve dentin tabakasına nüfuz eden renklenmelerin, özel formüle edilmiş tıbbi jeller ve teknolojik ışık kaynakları (Lazer veya LED) kullanılarak çözülmesi işlemidir. Evde yapılan karbonat gibi kulaktan dolma yöntemlerin aksine diş minesine asla zarar vermez.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Klinikte Beyazlatma (Office Bleaching) Nasıl Yapılır?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Sadece 45-60 dakikalık tek bir seansta gerçekleştirilen bu işlem şu basamaklardan oluşur:</p><ul class='list-disc pl-6 mb-6 text-slate-600 space-y-2'><li>Diş etlerinizin zarar görmemesi için özel bir koruyucu bariyer jel sürülerek dondurulur.</li><li>Diş yüzeylerine beyazlatma ajanı dikkatlice uygulanır.</li><li>Özel aktivasyon ışığı altında jelin diş lekelerini çözmesi sağlanır ve işlem sonunda diş tonunuz 3 ila 4 kata kadar açılır.</li></ul><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Sonuç Kalıcı mıdır?</h3><p class='text-slate-600 leading-relaxed'>Elde edilen beyazlık, hastanın renklendirici gıda (çay, kahve, asitli içecekler) ve sigara tüketim alışkanlıklarına bağlı olarak 1 ila 3 yıl boyunca kalıcılığını korur. Düzenli fırçalama ve yıllık hafif klinikler bakımları ile bu süreyi çok daha fazla uzatmak mümkündür.</p>"
     },
     {
       "id": 4,
       "title": "Estetik Dolgu",
       "slug": "estetik-dolgu",
       "short_desc": "Doğal görünümlü ve dayanıklı dolgular.",
-      "image_url": "assets/images/services/dolgu.jpg",
+      "image_url": "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?auto=format&fit=crop&w=800&q=80",
       "sort_order": 4,
-      "content": "<h2>Estetik Dolgu</h2><p></p>Diş rengindeki kompozit materyaller kullanılarak yapılan estetik dolgular hem doğal görünüm hem de yüksek dayanıklılık sağlar."
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>Eski nesil koyu renkli metal dolguların yarattığı estetik kaygılara son vererek, diş renginizle birebir uyumlu kompozit dolgular uyguluyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Estetik (Kompozit) Dolgu Nedir?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Çürük, kırık veya aşınma nedeniyle madde kaybına uğramış dişlerin, özel kompozit reçine materyalleriyle doldurulması işlemidir. Bu dolguların en büyük avantajı, dişin doğal rengine ve yarı geçirgen yapısına tam uyum sağlamasıdır. Bu sayede dışarıdan bakıldığında dişte dolgu olduğu kesinlikle anlaşılamaz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Uygulama Alanları Nelerdir?</h3><ul class='list-disc pl-6 mb-6 text-slate-600 space-y-2'><li>Arka ve ön dişlerdeki aktif çürüklerin temizlenip kapatılmasında,</li><li>Kırılmış, çatlamış veya formu bozulmuş dişlerin estetik restorasyonunda,</li><li>Dişler arasındaki küçük boşlukların (diastema) kapatılmasında (Bonding yöntemi),</li><li>Eski, amalgam (gri/siyah) dolguların sağlıklı ve estetik dolgularla değiştirilmesinde güvenle kullanılır.</li></ul><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Avantajları ve Ömrü</h3><p class='text-slate-600 leading-relaxed'>Kompozit dolgular kimyasal olarak diş dokusuna bağlandıkları için dişi destekler ve kırılmaları önler. Özel bir ışık cihazıyla saniyeler içinde sertleştirilen bu dolgular, işlem biter bitmez hemen çiğneme fonksiyonuna hazır hale gelir ve ağız hijyenine dikkat edildiği sürece uzun yıllar güvenle kullanılabilir.</p>"
     },
     {
       "id": 5,
       "title": "Kanal Tedavisi",
       "slug": "kanal-tedavisi",
       "short_desc": "Doğal dişi korumaya yönelik tedavi.",
-      "image_url": "assets/images/services/kanal.jpg",
+      "image_url": "https://images.unsplash.com/photo-1512223792601-592a9809eed4?auto=format&fit=crop&w=800&q=80",
       "sort_order": 5,
-      "content": "<h2>Kanal Tedavisi</h2><p>İleri çürük veya enfeksiyon nedeniyle zarar görmüş dişlerin çekilmeden kurtarılmasını sağlayan etkili bir tedavi yöntemidir.</p>"
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>İleri derece çürümüş, iltihaplanmış veya travma görmüş dişleri çekmek yerine, kök kanallarını temizleyip tedavi ederek ağızda tutmayı amaçlıyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Kanal Tedavisi (Endodonti) Hangi Durumlarda Gerekir?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Çürük diş yüzeyinden ilerleyip dişin merkezindeki canlı sinir paketine (pulpa) ulaştığında şiddetli ağrılara ve zonklamalara neden olur. Eğer bu aşamada müdahale edilmezse enfeksiyon çene kemiğine yayılabilir ve apseler oluşabilir. Sürekli geceleri artan diş ağrısı, sıcağa-soğuğa karşı aşırı hassasiyet ve diş etinde şişlik kanal tedavisinin en net belirtileridir.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>İşlem Esnasında Ağrı Hissedilir mi?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Halk arasında kanal tedavisinin çok ağrılı olduğuna dair yanlış bir inanış vardır. Gelişmiş lokal anestezi teknolojileri sayesinde, tedavi esnasında hissedeceğiniz şey normal bir dolgu işleminden farksızdır. Sinirler tamamen uyuşturulduğu için ağrı hissi tamamen ortadan kalkar.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Tedavi Aşamaları</h3><p class='text-slate-600 leading-relaxed'>İlk olarak çürük doku temizlenir ve kök kanallarına giriş sağlanır. Kanalların içindeki enfekte sinir dokuları özel döner aletlerle tamamen çıkarılır. Kanallar mikroplardan arındırılmak üzere tıbbi solüsyonlarla yıkanır, genişletilir ve ardından sızdırmaz dolgu maddeleriyle kök ucuna kadar doldurulur. Son aşamada dişin üst kısmına estetik dolgu veya kuron (kaplama) yapılarak dişin fonksiyonu geri kazandırılır.</p>"
     },
     {
       "id": 6,
       "title": "Pedodonti",
       "slug": "pedodonti",
       "short_desc": "Çocuklara özel ağız ve diş sağlığı hizmetleri.",
-      "image_url": "assets/images/services/cocuk.jpg",
+      "image_url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
       "sort_order": 6,
-      "content": "<h2>Pedodonti</h2><p>Çocukların ağız ve diş sağlığını korumaya yönelik koruyucu ve tedavi edici uygulamalar uzman pedodonti yaklaşımıyla gerçekleştirilir.</p>"
+      "content": "<p class='text-lg text-slate-600 mb-6 font-medium'>Bebeklikten ergenlik dönemine kadar çocukların süt ve kalıcı diş sağlığını takip ediyor, onlara diş hekimi korkusu yaşatmadan eğlenceli muayeneler sunuyoruz.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Pedodonti (Çocuk Diş Hekimliği) Neden Önemlidir?</h3><p class='mb-4 text-slate-600 leading-relaxed'>Süt dişleri, sadece çiğnemeyi sağlamakla kalmaz; alttan gelecek olan kalıcı dişlerin yerini korur ve çocuğun konuşma gelişimini doğrudan etkiler. Erken dönemde kaybedilen süt dişleri, gelecekte ciddi ortodontik (çapraşıklık) problemlere yol açabilir. Bu yüzden çocukların her 6 ayda bir uzman bir pedodontist tarafından kontrol edilmesi kritik önem taşır.</p><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Kliniğimizde Uygulanan Koruyucu Tedaviler</h3><ul class='list-disc pl-6 mb-6 text-slate-600 space-y-2'><li><strong>Fissür Örtücü (Diş Aşısı):</strong> Azı dişlerinin üzerindeki derin ve çürümeye yatkın oluklar, özel bir akıcı dolguyla kapatılarak yemek artıklarının buralara sıkışması ve çürük oluşturması %90 oranında engellenir.</li><li><strong>Florür Uygulaması:</strong> Diş minesini asitlere ve bakterilere karşı güçlendiren profesyonel flor jelleriyle, çocukların diş mineleri koruma altına alınır.</li><li><strong>Yer Tutucular:</strong> Erken kaybedilmiş süt dişlerinin yerine, yandaki dişlerin kaymasını engellemek amacıyla kişiye özel sabit veya hareketli apareyler yerleştirilir.</li></ul><h3 class='text-xl font-bold text-slate-800 mt-6 mb-3'>Diş Hekimi Korkusunu Birlikte Aşalım</h3><p class='text-slate-600 leading-relaxed'>Kliniğimizde çocuk hastalarımıza yaklaşımımız tamamen pedagojik temellere dayanır. Tedavi süreçlerini birer oyun gibi anlatarak (Anlat-Göster-Uygula prensibi) onların klinikten mutlu ve cesur bir şekilde ayrılmalarını sağlıyoruz.</p>"
     }
   ],
 
@@ -99,19 +118,19 @@
       "id": 1,
       "name": "Dr. Ahmet Yılmaz",
       "title": "İmplantoloji Uzmanı",
-      "image": "assets/images/doctors/doctor1.jpg"
+      "image": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=500&q=80"
     },
     {
       "id": 2,
       "name": "Dr. Elif Demir",
       "title": "Ortodonti Uzmanı",
-      "image": "assets/images/doctors/doctor2.jpg"
+      "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80"
     },
     {
       "id": 3,
       "name": "Dr. Mehmet Kaya",
       "title": "Estetik Diş Hekimi",
-      "image": "assets/images/doctors/doctor3.jpg"
+      "image": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=500&q=80"
     }
   ],
 
@@ -131,7 +150,7 @@
     {
       "id": 3,
       "name": "Zeynep Kaya",
-      "comment": ".Diş beyazlatma sonrası gülüşüm tamamen değişti. Sonuçtan çok memnun kaldım",
+      "comment": "Diş beyazlatma sonrası gülüşüm tamamen değişti. Sonuçtan çok memnun kaldım.",
       "rating": 5
     }
   ],
