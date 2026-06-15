@@ -1,4 +1,11 @@
 <?php
+$config = require __DIR__ . '/config.php';
+
+$colors = $config['colors'];
+$components = $config['components'];
+$font = $config['font'];
+$spacing = $config['spacing'];
+?>
 
 require_once __DIR__ . '/includes/db.php';
 

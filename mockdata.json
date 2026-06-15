@@ -1,0 +1,161 @@
+{
+  "settings": {
+    "clinic_name": "Nova Dent Ağız ve Diş Sağlığı Kliniği",
+    "slogan": "Sağlıklı ve Estetik Gülüşler İçin Güvenilir Çözümler",
+    "about_text": "Nova Dent Ağız ve Diş Sağlığı Kliniği, 2012 yılından bu yana modern diş hekimliği uygulamalarını ileri teknoloji ile buluşturarak hizmet vermektedir. Uzman hekim kadromuz ve hasta odaklı yaklaşımımız sayesinde her hastamıza kişiye özel tedavi planları sunuyor, sağlıklı ve estetik gülüşler kazandırıyoruz.",
+    "phone_primary": "+90 212 555 10 10",
+    "phone_secondary": "+90 532 555 20 20",
+    "email": "info@novadent.com",
+    "address": "Levent Mah. Büyükdere Cad. No:45 Beşiktaş / İstanbul",
+    "logo_url": "assets/images/logo.png",
+    "facebook_url": "https://facebook.com/novadent",
+    "instagram_url": "https://instagram.com/novadent",
+    "whatsapp_number": "905325552020",
+    "primary_color": "#0F766E",
+    "working_hours": {
+      "Pazartesi": "09:00 - 18:00",
+      "Salı": "09:00 - 18:00",
+      "Çarşamba": "09:00 - 18:00",
+      "Perşembe": "09:00 - 18:00",
+      "Cuma": "09:00 - 18:00",
+      "Cumartesi": "10:00 - 15:00",
+      "Pazar": "Kapalı"
+    },
+    "google_maps_embed": "https://maps.google.com"
+  },
+
+  "hero": {
+    "title": "Sağlıklı ve Estetik Gülüşler İçin Modern Diş Hekimliği",
+    "subtitle": "İmplant tedavisinden estetik uygulamalara, ortodontiden çocuk diş sağlığına kadar geniş kapsamlı hizmetlerimizle yanınızdayız.",
+    "image": "assets/images/hero.jpg"
+  },
+
+  "statistics": {
+    "happy_patients": 12500,
+    "years_experience": 14,
+    "successful_implants": 4200,
+    "expert_doctors": 8
+  },
+
+  "services": [
+    {
+      "id": 1,
+      "title": "İmplant Tedavisi",
+      "slug": "implant-tedavisi",
+      "short_desc": "Eksik dişler için kalıcı, estetik ve doğal çözümler.",
+      "image_url": "assets/images/services/implant.jpg",
+      "sort_order": 1,
+      "content": "<h2>İmplant Tedavisi</h2><p>Eksik dişlerin fonksiyonel ve estetik olarak yeniden kazandırılmasını sağlayan modern bir uygulamadır. Çene kemiğine yerleştirilen titanyum implantlar sayesinde doğal diş görünümü ve konforlu kullanım elde edilir..</p>"
+    },
+    {
+      "id": 2,
+      "title": "Ortodonti",
+      "slug": "ortodonti",
+      "short_desc": "Şeffaf plak ve tel tedavileriyle düzgün dişler.",
+      "image_url": "assets/images/services/ortodonti.jpg",
+      "sort_order": 2,
+      "content": "<h2>Ortodonti</h2><p>Ortodonti tedavileri, çapraşık dişlerin ve çene bozukluklarının düzeltilmesini sağlar. Şeffaf plak ve modern tel sistemleriyle daha estetik ve sağlıklı bir gülüş hedeflenir.</p>"
+    },
+    {
+      "id": 3,
+      "title": "Diş Beyazlatma",
+      "slug": "dis-beyazlatma",
+      "short_desc": "Daha beyaz ve daha parlak gülüşler.",
+      "image_url": "assets/images/services/beyazlatma.jpg",
+      "sort_order": 3,
+      "content": "<h2>Diş Beyazlatma</h2><p></p>Profesyonel beyazlatma uygulamaları sayesinde dişlerde oluşan renklenmeler giderilir, daha canlı ve estetik bir görünüm elde edilir."
+    },
+    {
+      "id": 4,
+      "title": "Estetik Dolgu",
+      "slug": "estetik-dolgu",
+      "short_desc": "Doğal görünümlü ve dayanıklı dolgular.",
+      "image_url": "assets/images/services/dolgu.jpg",
+      "sort_order": 4,
+      "content": "<h2>Estetik Dolgu</h2><p></p>Diş rengindeki kompozit materyaller kullanılarak yapılan estetik dolgular hem doğal görünüm hem de yüksek dayanıklılık sağlar."
+    },
+    {
+      "id": 5,
+      "title": "Kanal Tedavisi",
+      "slug": "kanal-tedavisi",
+      "short_desc": "Doğal dişi korumaya yönelik tedavi.",
+      "image_url": "assets/images/services/kanal.jpg",
+      "sort_order": 5,
+      "content": "<h2>Kanal Tedavisi</h2><p>İleri çürük veya enfeksiyon nedeniyle zarar görmüş dişlerin çekilmeden kurtarılmasını sağlayan etkili bir tedavi yöntemidir.</p>"
+    },
+    {
+      "id": 6,
+      "title": "Pedodonti",
+      "slug": "pedodonti",
+      "short_desc": "Çocuklara özel ağız ve diş sağlığı hizmetleri.",
+      "image_url": "assets/images/services/cocuk.jpg",
+      "sort_order": 6,
+      "content": "<h2>Pedodonti</h2><p>Çocukların ağız ve diş sağlığını korumaya yönelik koruyucu ve tedavi edici uygulamalar uzman pedodonti yaklaşımıyla gerçekleştirilir.</p>"
+    }
+  ],
+
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Ahmet Yılmaz",
+      "title": "İmplantoloji Uzmanı",
+      "image": "assets/images/doctors/doctor1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Dr. Elif Demir",
+      "title": "Ortodonti Uzmanı",
+      "image": "assets/images/doctors/doctor2.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Mehmet Kaya",
+      "title": "Estetik Diş Hekimi",
+      "image": "assets/images/doctors/doctor3.jpg"
+    }
+  ],
+
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Ayşe Demir",
+      "comment": "İmplant tedavim boyunca tüm ekip son derece ilgiliydi. Süreç beklediğimden çok daha rahat geçti.",
+      "rating": 5
+    },
+    {
+      "id": 2,
+      "name": "Mustafa Arslan",
+      "comment": "Modern bir klinik, güler yüzlü ekip ve profesyonel hizmet. Her aşamada detaylı bilgilendirildim.",
+      "rating": 5
+    },
+    {
+      "id": 3,
+      "name": "Zeynep Kaya",
+      "comment": ".Diş beyazlatma sonrası gülüşüm tamamen değişti. Sonuçtan çok memnun kaldım",
+      "rating": 5
+    }
+  ],
+
+  "faq": [
+    {
+      "question": "İmplant tedavisi ağrılı mıdır?",
+      "answer": "İşlem lokal anestezi altında gerçekleştirildiği için tedavi sırasında ağrı hissedilmez. Sonrasında oluşabilecek hafif hassasiyet kısa sürede geçer."
+    },
+    {
+      "question": "İlk muayene ücretli mi?",
+      "answer": "İlk muayene ve tedavi planlaması ücretsiz olarak gerçekleştirilmektedir."
+    },
+    {
+      "question": "Şeffaf plak tedavisi ne kadar sürer?",
+      "answer": "Tedavi süresi vakaya göre değişmekle birlikte genellikle 6 ila 18 ay arasında tamamlanmaktadır."
+    }
+  ],
+
+  "appointment_mock": {
+    "full_name": "Mehmet Kaya",
+    "phone": "+90 532 111 22 33",
+    "requested_date": "2026-07-15",
+    "service_id": 1,
+    "note": "Sabah saatleri tercih edilir."
+  }
+}
