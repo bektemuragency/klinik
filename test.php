@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 $config = require __DIR__ . '/config.php';
 
@@ -24,3 +25,5 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
+=======
+>>>>>>> 7cc9c7bd4dde6fc750f54c05e45af935962253e7

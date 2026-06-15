@@ -1,0 +1,5 @@
+﻿includes/config.php
+uploads/logo/*
+uploads/services/*
+!uploads/logo/.gitkeep
+!uploads/services/.gitkeep
