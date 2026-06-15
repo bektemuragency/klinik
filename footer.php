@@ -81,5 +81,14 @@
     </div>
 </footer>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,   // Animasyonun süresi (800 milisaniye = 0.8 saniye)
+            once: true,      // Animasyon sadece sayfa aşağı inerken bir kez çalışsın (yukarı çıkarken tekrar etmesin)
+            offset: 100      // Element ekrana 100 piksel kala animasyon başlasın
+        });
+    </script>
+
 </body>
 </html>
