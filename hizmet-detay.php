@@ -8,50 +8,81 @@ $spacing = $config['spacing'];
 
 $pageTitle = "Hizmet Detayı";
 
-// JSON oku
-$json = file_get_contents(__DIR__ . '/mockdata.json');
-$data = json_decode($json, true);
-
-$services = $data['services'];
-
-// URL'den gelen slug
+// URL'den gelen slug parametresini alıyoruz
 $slug = $_GET['slug'] ?? null;
 
-// Hizmeti bul
-$service = null;
+if (!$slug) {
+    http_response_code(404);
+    die("Geçersiz istek: Hizmet bilgisi eksik.");
+}
 
-foreach ($services as $item) {
-    if ($item['slug'] === $slug) {
-        $service = $item;
-        break;
+// 1. Canlı API'den tüm hizmetleri çekip slug ile filtreleme yapıyoruz
+// Not: Eğer API'niz tekil hizmet çekmeyi destekliyorsa (örn: services.php?slug=$slug) url'i ona göre de güncelleyebilirsiniz.
+$apiUrl = 'http://localhost/klinikcms/api/services.php';
+$response = @file_get_contents($apiUrl);
+$apiData = json_decode($response, true);
+
+$service = null;
+$isFromApi = false;
+
+// API başarılıysa ilgili slug'a sahip hizmeti arıyoruz
+if (isset($apiData['success']) && $apiData['success'] === true && !empty($apiData['data'])) {
+    foreach ($apiData['data'] as $item) {
+        if ($item['slug'] === $slug) {
+            $service = $item;
+            $isFromApi = true;
+            break;
+        }
     }
 }
 
-// Bulunamazsa
+// 2. YEDEKLEME (Fallback): Eğer API çalışmazsa veya hizmet API'de bulunamazsa mockdata.json'a bakıyoruz
 if (!$service) {
+    $json = file_get_contents(__DIR__ . '/mockdata.json');
+    $data = json_decode($json, true);
+    $mockServices = $data['services'] ?? [];
+
+    foreach ($mockServices as $item) {
+        if ($item['slug'] === $slug) {
+            $service = $item;
+            $isFromApi = false;
+            break;
+        }
+    }
+}
+
+// Hem API'de hem MockData'da bulunamazsa 404 dönüyoruz
+if (!$service || (isset($service['is_active']) && $service['is_active'] != 1)) {
     http_response_code(404);
-    echo "Hizmet bulunamadı.";
-    exit;
+    die("Hizmet bulunamadı veya şu anda aktif değil.");
+}
+
+// Dinamik Sayfa Başlığı Ayarlama
+$pageTitle = htmlspecialchars($service['title'] ?? 'Hizmet Detayı');
+
+// Resim yolunu kaynağına göre düzenleme
+if ($isFromApi) {
+    $imageUrl = 'http://localhost/klinikcms/' . ltrim($service['image_path'] ?? '', '/');
+} else {
+    $imageUrl = $service['image_url'] ?? '';
 }
 ?>
 
 <?php include __DIR__ . '/header.php'; ?>
 
 <!-- HERO SECTION -->
-<!-- Diğer tüm iç sayfalarla tam senkronize premium gradient arka plan -->
 <section class="relative bg-gradient-to-br from-teal-700 to-teal-900 text-white py-20 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
 
         <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
-            <?= $service['title'] ?>
+            <?= htmlspecialchars($service['title'] ?? '') ?>
         </h1>
 
         <p class="text-lg text-teal-100 max-w-3xl mx-auto font-light">
-            <?= $service['short_desc'] ?>
+            <?= htmlspecialchars($service['short_desc'] ?? '') ?>
         </p>
 
     </div>
-    <!-- Tasarım bütünlüğü için arka plan dekorasyonu -->
     <div class="absolute -top-24 -right-24 w-96 h-96 bg-teal-600/20 rounded-full blur-3xl"></div>
 </section>
 
@@ -59,24 +90,22 @@ if (!$service) {
 <section class="py-16">
     <div class="max-w-4xl mx-auto px-6">
 
-        <!-- Detay kartı yumuşatılmış gölgelerle havaya kaldırıldı -->
         <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100">
 
             <!-- IMAGE AREA -->
             <div class="h-64 md:h-96 relative">
                 <img
-                    src="<?= $service['image_url'] ?>"
+                    src="<?= htmlspecialchars($imageUrl) ?>"
                     class="w-full h-full object-cover"
-                    alt="<?= $service['title'] ?>"
+                    alt="<?= htmlspecialchars($service['title'] ?? '') ?>"
                 >
-                <!-- Resmin üzerine alt taraftan yumuşak bir karartma eklenerek derinlik hissi verildi -->
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent"></div>
             </div>
 
             <!-- TEXT & ARTICLE AREA -->
             <div class="p-8 md:p-12">
 
-                <!-- İçerikten gelecek olan p, h2, h3 tagleri için okunabilir satır aralığı (leading-relaxed) ayarlandı -->
+                <!-- İçerik HTML editöründen (CKEditor vb.) zengin metin olarak gelebileceği için direkt basıyoruz -->
                 <div class="text-slate-600 text-base md:text-lg leading-relaxed space-y-6">
                     <?= $service['content'] ?>
                 </div>
