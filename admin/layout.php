@@ -40,6 +40,10 @@ if (empty($_SESSION[ADMIN_SESSION_NAME])) {
                 🧾 Hizmetler
             </a>
 
+            <a href="doktorlar.php" class="block p-2 rounded hover:bg-gray-700">
+                🩺 Doktorlar
+            </a>
+
             <a href="randevular.php" class="block p-2 rounded hover:bg-gray-700">
                 📅 Randevular
             </a>
