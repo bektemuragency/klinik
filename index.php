@@ -32,6 +32,18 @@ if (isset($apiData['success']) && $apiData['success'] === true && !empty($apiDat
     $services = $data['services'];
     $isFromApi = false;
 }
+// 3. CANLI API'den Doktorları Çekme İşlemi
+$doctorApiUrl = 'http://localhost/klinikcms/api/doctors.php';
+$doctorResponse = @file_get_contents($doctorApiUrl);
+$doctorApiData = json_decode($doctorResponse, true);
+
+if (isset($doctorApiData['success']) && $doctorApiData['success'] === true && !empty($doctorApiData['data'])) {
+    $doctors = $doctorApiData['data'];
+    $isDoctorsApi = true;
+} else {
+    $doctors = $data['doctors'];
+    $isDoctorsApi = false;
+}
 ?>
 
 <?php include __DIR__ . '/header.php'; ?>
@@ -214,20 +226,40 @@ if (isset($apiData['success']) && $apiData['success'] === true && !empty($apiDat
     <div class="max-w-7xl mx-auto px-6 text-center">
 
         <div class="mb-16" data-aos="fade-up">
-            <span class="text-teal-600 font-bold uppercase tracking-widest text-xs bg-teal-50 px-3 py-1.5 rounded-lg">Kadromuz</span>
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-4">Uzman Hekimlerimiz</h2>
+            <span class="text-teal-600 font-bold uppercase tracking-widest text-xs bg-teal-50 px-3 py-1.5 rounded-lg">
+                Kadromuz
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-4">
+                Uzman Hekimlerimiz
+            </h2>
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
             <?php $delay = 0; foreach($doctors as $doc): $delay += 100; ?>
-                <div data-aos="fade-up" data-aos-delay="<?= $delay ?>" class="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/30 border border-slate-100 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+
+                <div data-aos="fade-up" data-aos-delay="<?= $delay ?>"
+                     class="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/30 border border-slate-100
+                            hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+
                     <div class="w-28 h-28 mx-auto rounded-full ring-4 ring-teal-50 overflow-hidden mb-5 shadow-inner">
-                        <img src="<?= htmlspecialchars($doc['image']) ?>" class="w-full h-full object-cover" alt="<?= htmlspecialchars($doc['name']) ?>">
+                        <img src="<?= htmlspecialchars($doc['image'] ?? '') ?>"
+                             class="w-full h-full object-cover"
+                             alt="<?= htmlspecialchars($doc['name'] ?? '') ?>">
                     </div>
-                    <h3 class="font-bold text-slate-800 text-lg tracking-tight"><?= htmlspecialchars($doc['name']) ?></h3>
-                    <p class="text-teal-600 text-sm font-semibold mt-1 uppercase tracking-wide"><?= htmlspecialchars($doc['title']) ?></p>
+
+                    <h3 class="font-bold text-slate-800 text-lg tracking-tight">
+                        <?= htmlspecialchars($doc['name'] ?? '') ?>
+                    </h3>
+
+                    <p class="text-teal-600 text-sm font-semibold mt-1 uppercase tracking-wide">
+                        <?= htmlspecialchars($doc['title'] ?? '') ?>
+                    </p>
+
                 </div>
+
             <?php endforeach; ?>
+
         </div>
 
     </div>
