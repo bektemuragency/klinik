@@ -3,7 +3,9 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/admin_guard.php';
 require_once __DIR__ . '/../../includes/functions.php';
- 
+
+verifyCsrf();
+
 $pdo = getDB();
  
 $clinic_name        = clean($_POST['clinic_name']        ?? '');

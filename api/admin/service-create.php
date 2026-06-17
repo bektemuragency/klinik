@@ -2,6 +2,13 @@
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../../includes/admin_guard.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    jsonError("Geçersiz istek metodu", 405);
+}
+
+verifyCsrf();
 
 $pdo = getDB();
 
@@ -26,10 +33,10 @@ if (!$title) {
 
 /*
 ========================
-SLUG
+SLUG (cakisma kontrollu)
 ========================
 */
-$slug = toSlug($title);
+$slug = uniqueSlug(toSlug($title));
 
 /*
 ========================

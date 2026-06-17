@@ -1,6 +1,6 @@
 <?php
 // includes/functions.php
-// Ortak yardimci fonksiyonlar (slug, upload, sanitize vs.)
+// Ortak yardimci fonksiyonlar (slug, upload, sanitize, csrf vs.)
 
 require_once __DIR__ . '/db.php';
 
@@ -48,23 +48,57 @@ function uniqueSlug(string $base, int $excludeId = 0): string {
 }
 
 
-// DOSYA YUKLEME (IMAGE UPLOAD)
+// DOSYA YUKLEME (IMAGE UPLOAD) - guvenlik sertlestirilmis versiyon
 function uploadImage(array $file, string $folder): string|false {
 
-    // izin verilen tipler
-    $allowed = ['image/jpeg', 'image/png', 'image/webp'];
-
-    if (!isset($file['type']) || !in_array($file['type'], $allowed)) {
+    // upload hatasi kontrolu (PHP tarafinda bir sorun olduysa)
+    if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
         return false;
     }
 
     // max 3MB
-    if ($file['size'] > 3 * 1024 * 1024) {
+    if (!isset($file['size']) || $file['size'] > 3 * 1024 * 1024) {
         return false;
     }
 
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $name = uniqid('img_') . '.' . strtolower($ext);
+    // izin verilen uzantilar (dosya adindan degil, whitelist'ten kontrol)
+    $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
+    $ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $allowedExt, true)) {
+        return false;
+    }
+
+    // GERCEK dosya icerigine bakarak MIME tespiti (Content-Type header'ina guvenme)
+    $allowedMime = [
+        'image/jpeg' => ['jpg', 'jpeg'],
+        'image/png'  => ['png'],
+        'image/webp' => ['webp'],
+    ];
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $realMime = $finfo ? finfo_file($finfo, $file['tmp_name']) : false;
+    if ($finfo) {
+        finfo_close($finfo);
+    }
+
+    if (!$realMime || !isset($allowedMime[$realMime])) {
+        return false;
+    }
+
+    // gercek MIME ile uzantinin tutarli olmasini zorunlu kil
+    if (!in_array($ext, $allowedMime[$realMime], true)) {
+        return false;
+    }
+
+    // ek guvence: gercekten bir resim mi (getimagesize bos donerse resim degildir)
+    if (@getimagesize($file['tmp_name']) === false) {
+        return false;
+    }
+
+    // dosya adini TAMAMEN biz uretiyoruz, kullanicidan gelen isim asla kullanilmiyor
+    $name = uniqid('img_', true) . '.' . $ext;
+    $name = preg_replace('/[^a-zA-Z0-9_\.\-]/', '', $name); // ekstra guvenlik
 
     $dir = UPLOAD_PATH . $folder . '/';
 
@@ -79,11 +113,68 @@ function uploadImage(array $file, string $folder): string|false {
         return false;
     }
 
+    // yuklenen dosyanin calistirilabilir olmamasini garanti et
+    @chmod($path, 0644);
+
     return 'uploads/' . $folder . '/' . $name;
 }
 
 
-// INPUT TEMIZLEME (XSS KORUMA)
+// CSRF TOKEN OLUSTUR / GETIR
+function csrfToken(): string {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (
+        empty($_SESSION['csrf_token']) ||
+        !is_string($_SESSION['csrf_token'])
+    ) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+
+// FORM ICIN HIDDEN CSRF INPUT
+function csrfInput(): string {
+    return '<input type="hidden" name="csrf_token" value="' .
+        htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') .
+    '">';
+}
+
+
+// CSRF TOKEN DOGRULA
+function verifyCsrf(): void {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $sessionToken = $_SESSION['csrf_token'] ?? '';
+    $postedToken  = $_POST['csrf_token'] ?? '';
+
+    if (
+        !is_string($sessionToken) ||
+        !is_string($postedToken) ||
+        $sessionToken === '' ||
+        $postedToken === '' ||
+        !hash_equals($sessionToken, $postedToken)
+    ) {
+        jsonError('Güvenlik doğrulaması başarısız.', 403);
+    }
+}
+
+
+// INPUT TEMIZLEME (DB/STORAGE icin - SADECE trim, HTML escape YOK)
+// XSS korumasi artik OUTPUT katmaninda (ekrana basarken htmlspecialchars ile) yapilmali.
+// Bu sayede veri DB'de "temiz" / orijinal haliyle saklanir, cift encode olmaz.
 function clean(string $value): string {
-    return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
+    return trim($value);
+}
+
+
+// OUTPUT ESCAPE (ekrana basarken kullan, DB'ye yazmadan once degil)
+function escapeOutput(string $value): string {
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }

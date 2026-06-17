@@ -1,5 +1,24 @@
-﻿includes/config.php
+﻿# Config
+includes/config.php
+
+# Uploads
 uploads/logo/*
 uploads/services/*
+uploads/doctors/*
 !uploads/logo/.gitkeep
 !uploads/services/.gitkeep
+!uploads/doctors/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Test / dump files
+test.php
+project_dump*.txt
+project_tree*.txt
+*.log
+
+# IDE
+.vscode/
+.idea/

@@ -15,6 +15,19 @@ ob_start();
 <div id="list" class="space-y-4"></div>
 
 <script>
+function esc(value) {
+    return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+function safeId(value) {
+    return Number.parseInt(value, 10) || 0;
+}
+
 async function loadServices() {
     const res = await fetch("../api/admin/service-list.php");
     const data = await res.json();
@@ -22,28 +35,42 @@ async function loadServices() {
     const list = document.getElementById("list");
     list.innerHTML = "";
 
+    if (!data.success || !Array.isArray(data.data)) {
+        list.innerHTML = `
+            <div class="bg-red-100 text-red-700 p-4 rounded">
+                Hizmetler yüklenemedi.
+            </div>
+        `;
+        return;
+    }
+
     data.data.forEach(item => {
+        const id = safeId(item.id);
+        const title = esc(item.title);
+        const shortDesc = esc(item.short_desc);
+        const imagePath = esc(item.image_path);
+
         list.innerHTML += `
         <div class="bg-white p-4 rounded shadow flex gap-4 items-center">
 
             <div class="w-20 h-20">
-                ${item.image_path ?
-                    `<img src="../${item.image_path}" class="w-full h-full object-cover rounded">`
+                ${imagePath ?
+                    `<img src="../${imagePath}" class="w-full h-full object-cover rounded" alt="${title}">`
                     :
                     `<div class="bg-gray-200 w-full h-full rounded"></div>`
                 }
             </div>
 
             <div class="flex-1">
-                <h2 class="font-bold">${item.title}</h2>
-                <p class="text-sm text-gray-500">${item.short_desc ?? ''}</p>
+                <h2 class="font-bold">${title}</h2>
+                <p class="text-sm text-gray-500">${shortDesc}</p>
             </div>
 
             <div class="flex gap-2">
-                <a href="hizmet-duzenle.php?id=${item.id}"
+                <a href="hizmet-duzenle.php?id=${id}"
                    class="bg-yellow-500 px-3 py-1 text-white rounded">Düzenle</a>
 
-                <button onclick="deleteService(${item.id})"
+                <button onclick="deleteService(${id})"
                         class="bg-red-500 px-3 py-1 text-white rounded">
                     Sil
                 </button>
@@ -54,10 +81,18 @@ async function loadServices() {
 }
 
 async function deleteService(id) {
+    id = safeId(id);
+
+    if (!id) {
+        alert("Geçersiz ID");
+        return;
+    }
+
     if (!confirm("Silinsin mi?")) return;
 
     const fd = new FormData();
     fd.append("id", id);
+    fd.append("csrf_token", window.CSRF_TOKEN || "");
 
     await fetch("../api/admin/service-delete.php", {
         method: "POST",

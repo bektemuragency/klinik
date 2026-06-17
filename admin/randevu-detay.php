@@ -48,7 +48,6 @@ ob_start();
 const id = new URLSearchParams(window.location.search).get('id');
 
 async function load() {
-
     const res = await fetch('../api/admin/appt-detail.php?id=' + id);
     const json = await res.json();
 
@@ -72,7 +71,6 @@ async function load() {
 }
 
 async function updateStatus(status) {
-
     const confirmText = status === 'confirmed'
         ? "Randevuyu ONAYLAMAK istiyor musun?"
         : "Randevuyu İPTAL etmek istiyor musun?";
@@ -83,9 +81,10 @@ async function updateStatus(status) {
         const res = await fetch('../api/admin/appt-status.php', {
             method: 'POST',
             body: new URLSearchParams({
-                id,
-                status,
-                admin_note: document.getElementById('admin_note').value
+                id: id,
+                status: status,
+                admin_note: document.getElementById('admin_note').value,
+                csrf_token: window.CSRF_TOKEN || ""
             })
         });
 

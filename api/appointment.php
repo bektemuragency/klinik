@@ -10,32 +10,121 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Sadece POST desteklenir", 405);
 }
 
-// INPUTS
+/*
+========================
+SPAM HONEYPOT
+========================
+Formda gizli website alanı olursa bot doldurur.
+Normal kullanıcı boş gönderir.
+========================
+*/
+$honeypot = trim($_POST['website'] ?? '');
+
+if ($honeypot !== '') {
+    jsonError("İşlem reddedildi", 400);
+}
+
+/*
+========================
+IP / RATE LIMIT
+========================
+Aynı IP 10 dakikada en fazla 5 randevu oluşturabilir.
+========================
+*/
+$ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+
+if ($ipAddress) {
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM appointments
+        WHERE ip_address = ?
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+    ");
+    $stmt->execute([$ipAddress]);
+
+    $recentCount = (int)$stmt->fetchColumn();
+
+    if ($recentCount >= 5) {
+        jsonError("Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.", 429);
+    }
+}
+
+/*
+========================
+INPUTS
+========================
+*/
 $full_name  = clean($_POST['full_name'] ?? '');
 $phone      = clean($_POST['phone'] ?? '');
 $email      = clean($_POST['email'] ?? '');
-$service_id = $_POST['service_id'] ?? null;
+$service_id = (int)($_POST['service_id'] ?? 0);
 
-$appointment_date = $_POST['date'] ?? null;
-$appointment_time = $_POST['time'] ?? null;
+$appointment_date = trim($_POST['date'] ?? '');
+$appointment_time = trim($_POST['time'] ?? '');
 
 $message = clean($_POST['message'] ?? '');
 
-// VALIDATION
+/*
+========================
+VALIDATION
+========================
+*/
 if (!$full_name || !$phone || !$service_id || !$appointment_date || !$appointment_time) {
     jsonError("Zorunlu alanlar eksik");
 }
 
-if (strlen($phone) < 10) {
+if (mb_strlen($full_name) < 3 || mb_strlen($full_name) > 100) {
+    jsonError("Ad Soyad geçersiz");
+}
+
+if (!preg_match('/^[0-9+\s()-]{10,20}$/', $phone)) {
     jsonError("Telefon geçersiz");
 }
 
-if (strtotime($appointment_date) < strtotime(date("Y-m-d"))) {
+if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    jsonError("Email geçersiz");
+}
+
+if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $appointment_date)) {
+    jsonError("Tarih formatı geçersiz");
+}
+
+if (!preg_match('/^\d{2}:\d{2}$/', $appointment_time)) {
+    jsonError("Saat formatı geçersiz");
+}
+
+$selectedDate = DateTime::createFromFormat('Y-m-d', $appointment_date);
+$today = new DateTime(date('Y-m-d'));
+
+if (!$selectedDate || $selectedDate < $today) {
     jsonError("Geçmiş tarih seçilemez");
 }
 
-try {
+/*
+========================
+SERVICE CHECK
+Sadece aktif hizmete randevu alınabilir.
+========================
+*/
+$stmt = $pdo->prepare("
+    SELECT id
+    FROM services
+    WHERE id = ?
+      AND is_active = 1
+    LIMIT 1
+");
+$stmt->execute([$service_id]);
 
+if (!$stmt->fetch()) {
+    jsonError("Geçersiz hizmet seçimi");
+}
+
+/*
+========================
+INSERT
+========================
+*/
+try {
     $stmt = $pdo->prepare("
         INSERT INTO appointments
         (
@@ -68,16 +157,16 @@ try {
     $stmt->execute([
         ':full_name' => $full_name,
         ':phone' => $phone,
-        ':email' => $email,
+        ':email' => $email ?: null,
         ':service_id' => $service_id,
         ':appointment_date' => $appointment_date,
         ':appointment_time' => $appointment_time,
         ':message' => $message,
-        ':ip_address' => $_SERVER['REMOTE_ADDR'] ?? null
+        ':ip_address' => $ipAddress
     ]);
 
     jsonSuccess(null, "Randevu oluşturuldu");
 
 } catch (Exception $e) {
-    jsonError("DB hatası: " . $e->getMessage(), 500);
+    jsonError("Randevu oluşturulurken bir hata oluştu", 500);
 }

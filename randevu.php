@@ -3,11 +3,55 @@ $config = require __DIR__ . '/config.php';
 
 $pageTitle = "Randevu Al";
 
-$json = file_get_contents(__DIR__ . '/mockdata.json');
-$data = json_decode($json, true);
+/*
+========================
+MOCK FALLBACK
+========================
+*/
+$json = @file_get_contents(__DIR__ . '/mockdata.json');
+$data = $json ? json_decode($json, true) : [];
 
-$settings = $data['settings'];
-$services = $data['services'];
+$settings = $data['settings'] ?? [
+    'clinic_name' => 'Klinik'
+];
+
+$services = $data['services'] ?? [];
+
+/*
+========================
+SETTINGS API
+========================
+*/
+$settingsApiUrl = 'http://localhost/klinikcms/api/settings.php';
+$settingsResponse = @file_get_contents($settingsApiUrl);
+$settingsApiData = json_decode($settingsResponse, true);
+
+if (
+    isset($settingsApiData['success']) &&
+    $settingsApiData['success'] === true &&
+    !empty($settingsApiData['data'])
+) {
+    $settings = $settingsApiData['data'];
+}
+
+/*
+========================
+SERVICES API
+========================
+*/
+$servicesApiUrl = 'http://localhost/klinikcms/api/services.php';
+$servicesResponse = @file_get_contents($servicesApiUrl);
+$servicesApiData = json_decode($servicesResponse, true);
+
+if (
+    isset($servicesApiData['success']) &&
+    $servicesApiData['success'] === true &&
+    !empty($servicesApiData['data'])
+) {
+    $services = $servicesApiData['data'];
+}
+
+$today = date('Y-m-d');
 ?>
 
 <?php include __DIR__ . '/header.php'; ?>
@@ -20,7 +64,7 @@ $services = $data['services'];
         </h1>
 
         <p class="text-lg text-teal-100 max-w-3xl mx-auto font-light">
-            <?= $settings['clinic_name'] ?> üzerinden kolayca randevu oluşturabilirsiniz.
+            <?= htmlspecialchars($settings['clinic_name'] ?? 'Klinik', ENT_QUOTES, 'UTF-8') ?> üzerinden kolayca randevu oluşturabilirsiniz.
         </p>
 
     </div>
@@ -35,8 +79,14 @@ $services = $data['services'];
                 Randevu Talep Formu
             </h2>
 
-            <!-- FORM -->
             <form id="appointmentForm" class="grid md:grid-cols-2 gap-6">
+
+                <!-- HONEYPOT / SPAM KORUMA -->
+                <input type="text"
+                       name="website"
+                       class="hidden"
+                       tabindex="-1"
+                       autocomplete="off">
 
                 <!-- AD SOYAD -->
                 <div>
@@ -68,9 +118,10 @@ $services = $data['services'];
                     <select name="service_id" required
                             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5">
                         <option value="" disabled selected>Hizmet seçiniz</option>
-                        <?php foreach($services as $service): ?>
-                            <option value="<?= $service['id'] ?>">
-                                <?= $service['title'] ?>
+
+                        <?php foreach ($services as $service): ?>
+                            <option value="<?= (int)($service['id'] ?? 0) ?>">
+                                <?= htmlspecialchars($service['title'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -80,6 +131,7 @@ $services = $data['services'];
                 <div>
                     <label class="block text-slate-700 font-medium mb-2 text-sm">Tarih</label>
                     <input type="date" name="date" required
+                           min="<?= htmlspecialchars($today, ENT_QUOTES, 'UTF-8') ?>"
                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5">
                 </div>
 
@@ -101,6 +153,7 @@ $services = $data['services'];
                 <!-- BUTON -->
                 <div class="md:col-span-2 text-center">
                     <button type="submit"
+                            id="submitBtn"
                             class="bg-teal-700 hover:bg-teal-800 text-white px-8 py-3 rounded-xl font-semibold">
                         Randevu Oluştur
                     </button>
@@ -108,7 +161,6 @@ $services = $data['services'];
 
             </form>
 
-            <!-- MESSAGE BOX -->
             <div id="msgBox" class="hidden mt-6 text-center font-semibold"></div>
 
         </div>
@@ -117,15 +169,17 @@ $services = $data['services'];
 
 <?php include __DIR__ . '/footer.php'; ?>
 
-<!-- AJAX SCRIPT -->
 <script>
 const form = document.getElementById("appointmentForm");
 const msgBox = document.getElementById("msgBox");
+const submitBtn = document.getElementById("submitBtn");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     msgBox.classList.add("hidden");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Gönderiliyor...";
 
     const formData = new FormData(form);
 
@@ -154,5 +208,8 @@ form.addEventListener("submit", async (e) => {
         msgBox.className = "mt-6 text-center font-semibold text-red-600";
         msgBox.classList.remove("hidden");
     }
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Randevu Oluştur";
 });
 </script>

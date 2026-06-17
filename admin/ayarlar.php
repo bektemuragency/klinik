@@ -139,6 +139,8 @@ ob_start();
 </form>
  
 <script>
+const getCsrfToken = () => window.CSRF_TOKEN || '';
+
 /* renk picker senkron */
 const picker   = document.getElementById("colorPicker");
 const colorTxt = document.getElementById("colorText");
@@ -159,9 +161,14 @@ document.getElementById("logoFile").addEventListener("change", async (e) => {
  
     const fd = new FormData();
     fd.append("logo", file);
+    fd.append("csrf_token", getCsrfToken());
  
     try {
-        const res  = await fetch("../api/admin/logo-upload.php", { method: "POST", body: fd });
+        const res  = await fetch("../api/admin/logo-upload.php", {
+            method: "POST",
+            body: fd
+        });
+
         const data = await res.json();
  
         if (data.success) {
@@ -234,11 +241,15 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     msg.innerText = "Kaydediliyor...";
     msg.className = "text-sm text-gray-500";
  
+    const fd = new FormData(e.target);
+    fd.append("csrf_token", getCsrfToken());
+
     try {
         const res  = await fetch("../api/admin/settings-update.php", {
             method: "POST",
-            body: new FormData(e.target)
+            body: fd
         });
+
         const data = await res.json();
  
         if (data.success) {

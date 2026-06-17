@@ -1,0 +1,34 @@
+# uploads/ klasorunde hicbir script calistirilamaz.
+# Bu klasor yalnizca resim dosyalari (jpg, png, webp) barindirmalidir.
+# Kod seviyesindeki dosya yukleme kontrolleri bypass edilse bile
+# bu kural son savunma hatti olarak calisir.
+
+# Apache 2.4+ (mod_authz_core)
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(php|php3|php4|php5|php7|phtml|pl|py|cgi|sh|asp|aspx|exe|jsp|htaccess)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+# Apache 2.2 ve oncesi (mod_access_compat) icin geriye uyumluluk
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.(php|php3|php4|php5|php7|phtml|pl|py|cgi|sh|asp|aspx|exe|jsp|htaccess)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# PHP'nin bu klasor icinde herhangi bir sekilde calismasini engelle
+# (XAMPP/Apache php_admin_flag destekliyorsa ek guvenlik katmani)
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Dizin listelemeyi kapat (klasor icerigi tarayicidan goruntulenemesin)
+Options -Indexes

@@ -10,7 +10,14 @@ if (!$slug) {
     jsonError("Slug gerekli");
 }
 
-$stmt = $pdo->prepare("SELECT * FROM services WHERE slug = ?");
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM services
+    WHERE slug = ?
+      AND is_active = 1
+    LIMIT 1
+");
+
 $stmt->execute([$slug]);
 
 $service = $stmt->fetch();

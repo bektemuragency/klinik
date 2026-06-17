@@ -1,0 +1,19 @@
+Options -Indexes
+
+# Gizli / sistem dosyalarını kapat
+<FilesMatch "^(\.env|\.git|\.DS_Store|composer\.json|composer\.lock|package\.json|package-lock\.json|project_dump.*|project_tree.*|test\.php|mockdata\.json)$">
+    Require all denied
+</FilesMatch>
+
+# Config ve include dosyalarına direkt erişimi kapat
+RedirectMatch 403 ^/klinikcms/includes/.*
+
+# PHP hata çıktısını kapat
+php_flag display_errors Off
+
+# Basit güvenlik headerları
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

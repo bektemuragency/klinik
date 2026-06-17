@@ -1,9 +1,42 @@
 <?php
-// Eğer bu dosya doğrudan çağrılırsa config ve data ayarlarını korumak için kontrol
-if (!isset($settings)) {
+/*
+========================================
+SETTINGS API'DEN ÇEK
+========================================
+*/
+$settings = [];
+
+$settingsApi = 'http://localhost/klinikcms/api/settings.php';
+$settingsResponse = @file_get_contents($settingsApi);
+
+if ($settingsResponse !== false) {
+    $settingsJson = json_decode($settingsResponse, true);
+
+    if (
+        isset($settingsJson['success']) &&
+        $settingsJson['success'] === true &&
+        isset($settingsJson['data'])
+    ) {
+        $settings = $settingsJson['data'];
+    }
+}
+
+/*
+========================================
+API ÇALIŞMAZSA MOCKDATA'YA DÜŞ
+========================================
+*/
+if (empty($settings)) {
     $json = @file_get_contents(__DIR__ . '/mockdata.json');
     $data = $json ? json_decode($json, true) : [];
-    $settings = $data['settings'] ?? ['clinic_name' => 'Nova Dent', 'phone_primary' => '', 'address' => ''];
+
+    $settings = $data['settings'] ?? [
+        'clinic_name'   => 'Nova Dent',
+        'phone_primary' => '',
+        'address'       => '',
+        'email'         => '',
+        'slogan'        => ''
+    ];
 }
 ?>
 <!DOCTYPE html>
@@ -11,8 +44,8 @@ if (!isset($settings)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($pageTitle) ? $pageTitle . " - " : "" ?><?= $settings['clinic_name'] ?></title>
-    
+    <title><?= isset($pageTitle) ? $pageTitle . " - " : "" ?><?= htmlspecialchars($settings['clinic_name'] ?? 'Nova Dent') ?></title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +65,7 @@ if (!isset($settings)) {
 <div class="bg-slate-900 text-slate-400 text-xs py-2.5 px-6 border-b border-slate-800 hidden md:block">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-6">
-            <span>📞 <?= isset($settings['phone_primary']) ? $settings['phone_primary'] : '' ?></span>
+            <span>📞 <?= htmlspecialchars($settings['phone_primary'] ?? '') ?></span>
             <span>📍 <?= isset($settings['address']) ? mb_strimwidth($settings['address'], 0, 50, "...") : '' ?></span>
         </div>
         <div>
@@ -43,10 +76,10 @@ if (!isset($settings)) {
 
 <header class="bg-white sticky top-0 z-50 border-b border-slate-100 shadow-sm">
     <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-        
+
         <a href="index.php" class="flex items-center space-x-2 group">
             <span class="text-2xl font-black tracking-tight text-slate-800">
-                <?= $settings['clinic_name'] ?>
+                <?= htmlspecialchars($settings['clinic_name'] ?? 'Nova Dent') ?>
             </span>
         </a>
 
@@ -55,8 +88,8 @@ if (!isset($settings)) {
             <a href="hizmetler.php" class="hover:text-teal-600 transition">Hizmetlerimiz</a>
             <a href="doktorlarimiz.php" class="hover:text-teal-600 transition">Doktorlarımız</a>
             <a href="iletisim.php" class="hover:text-teal-600 transition">İletişim</a>
-            
-            <a href="randevu.php" 
+
+            <a href="randevu.php"
                class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all duration-300">
                 Hızlı Randevu
             </a>
@@ -80,7 +113,6 @@ if (!isset($settings)) {
 </header>
 
 <script>
-    // Mobil Menü Açma/Kapama Scripti
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     const icon = document.getElementById('menu-icon');
@@ -88,6 +120,7 @@ if (!isset($settings)) {
     if (btn && menu && icon) {
         btn.addEventListener('click', () => {
             menu.classList.toggle('hidden');
+
             if(menu.classList.contains('hidden')) {
                 icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
             } else {

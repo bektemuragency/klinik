@@ -81,9 +81,12 @@ load();
 document.getElementById("editForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const fd = new FormData(e.target);
+    fd.append("csrf_token", window.CSRF_TOKEN || "");
+
     const res = await fetch("../api/admin/service-update.php", {
         method: "POST",
-        body: new FormData(e.target)
+        body: fd
     });
 
     const data = await res.json();

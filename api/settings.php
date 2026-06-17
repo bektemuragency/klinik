@@ -3,6 +3,10 @@
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/response.php';
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    jsonError("Sadece GET desteklenir", 405);
+}
+
 $pdo = getDB();
 
 $stmt = $pdo->query("
