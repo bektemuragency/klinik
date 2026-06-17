@@ -2,11 +2,15 @@
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/functions.php';
-
-session_start();
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/activity_log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Geçersiz istek metodu", 405);
+}
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
 /*
@@ -15,6 +19,31 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 |--------------------------------------------------------------------------
 */
 verifyCsrf();
+
+$adminBeforeLogout = $_SESSION[ADMIN_SESSION_NAME] ?? null;
+
+/*
+|--------------------------------------------------------------------------
+| Activity Log
+|--------------------------------------------------------------------------
+*/
+if ($adminBeforeLogout && isset($adminBeforeLogout['id'])) {
+    $pdo = getDB();
+
+    logActivity(
+        $pdo,
+        'logout',
+        'user',
+        (int)$adminBeforeLogout['id'],
+        null,
+        [
+            'id' => (int)$adminBeforeLogout['id'],
+            'name' => $adminBeforeLogout['name'] ?? null,
+            'role' => $adminBeforeLogout['role'] ?? null
+        ],
+        (int)$adminBeforeLogout['id']
+    );
+}
 
 // session içini tamamen temizle
 $_SESSION = [];

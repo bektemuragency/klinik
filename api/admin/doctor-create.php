@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/admin_guard.php';
+require_once __DIR__ . '/../../includes/activity_log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Geçersiz istek metodu", 405);
@@ -71,5 +72,25 @@ $stmt->execute([
     $phone,
     $email
 ]);
+
+$doctorId = (int)$pdo->lastInsertId();
+
+logActivity(
+    $pdo,
+    'doctor_created',
+    'doctor',
+    $doctorId,
+    null,
+    [
+        'id' => $doctorId,
+        'name' => $name,
+        'title' => $title,
+        'specialty' => $specialty,
+        'bio' => $bio,
+        'image' => $image_path,
+        'phone' => $phone,
+        'email' => $email
+    ]
+);
 
 jsonSuccess(null, "Doktor başarıyla eklendi");

@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/admin_guard.php';
 require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../../includes/activity_log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Geçersiz istek metodu", 405);
@@ -31,6 +32,29 @@ if (!in_array($status, $allowed, true)) {
     jsonError('Geçersiz durum');
 }
 
+/*
+====================
+OLD DATA
+====================
+*/
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM appointments
+    WHERE id = ?
+    LIMIT 1
+");
+$stmt->execute([$id]);
+$oldAppointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$oldAppointment) {
+    jsonError('Randevu bulunamadı', 404);
+}
+
+/*
+====================
+UPDATE
+====================
+*/
 $stmt = $pdo->prepare("
     UPDATE appointments
     SET
@@ -46,9 +70,28 @@ $stmt->execute([
     $id
 ]);
 
-if ($stmt->rowCount() === 0) {
-    jsonError('Randevu bulunamadı veya değişiklik yapılmadı', 404);
-}
+/*
+====================
+NEW DATA
+====================
+*/
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM appointments
+    WHERE id = ?
+    LIMIT 1
+");
+$stmt->execute([$id]);
+$newAppointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+logActivity(
+    $pdo,
+    'appointment_status_updated',
+    'appointment',
+    $id,
+    $oldAppointment,
+    $newAppointment
+);
 
 jsonSuccess([
     'id'         => $id,

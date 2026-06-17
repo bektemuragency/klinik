@@ -26,6 +26,19 @@ if ($honeypot !== '') {
 
 /*
 ========================
+KVKK ONAY KONTROLÜ
+========================
+Public randevu formunda kullanıcı açıkça onay vermeli.
+========================
+*/
+$kvkk_consent = $_POST['kvkk_consent'] ?? '';
+
+if ($kvkk_consent !== '1') {
+    jsonError("KVKK aydınlatma metnini onaylamalısınız.");
+}
+
+/*
+========================
 IP / RATE LIMIT
 ========================
 Aynı IP 10 dakikada en fazla 5 randevu oluşturabilir.
@@ -59,10 +72,28 @@ $phone      = clean($_POST['phone'] ?? '');
 $email      = clean($_POST['email'] ?? '');
 $service_id = (int)($_POST['service_id'] ?? 0);
 
-$appointment_date = trim($_POST['date'] ?? '');
-$appointment_time = trim($_POST['time'] ?? '');
+/*
+|--------------------------------------------------------------------------
+| TARİH / SAAT UYUMLULUK
+|--------------------------------------------------------------------------
+| Eski form: date / time
+| Yeni form: appointment_date / appointment_time
+| İkisini de destekliyoruz.
+|--------------------------------------------------------------------------
+*/
+$appointment_date = trim($_POST['appointment_date'] ?? ($_POST['date'] ?? ''));
+$appointment_time = trim($_POST['appointment_time'] ?? ($_POST['time'] ?? ''));
 
-$message = clean($_POST['message'] ?? '');
+/*
+|--------------------------------------------------------------------------
+| KULLANICI NOTU UYUMLULUK
+|--------------------------------------------------------------------------
+| Eski form: note
+| Yeni form: message
+| İkisini de destekliyoruz.
+|--------------------------------------------------------------------------
+*/
+$message = clean($_POST['message'] ?? ($_POST['note'] ?? ''));
 
 /*
 ========================
@@ -73,7 +104,7 @@ if (!$full_name || !$phone || !$service_id || !$appointment_date || !$appointmen
     jsonError("Zorunlu alanlar eksik");
 }
 
-if (mb_strlen($full_name) < 3 || mb_strlen($full_name) > 100) {
+if (mb_strlen($full_name, 'UTF-8') < 3 || mb_strlen($full_name, 'UTF-8') > 100) {
     jsonError("Ad Soyad geçersiz");
 }
 
@@ -93,10 +124,18 @@ if (!preg_match('/^\d{2}:\d{2}$/', $appointment_time)) {
     jsonError("Saat formatı geçersiz");
 }
 
+if (mb_strlen($message, 'UTF-8') > 1000) {
+    jsonError("Not alanı en fazla 1000 karakter olabilir");
+}
+
 $selectedDate = DateTime::createFromFormat('Y-m-d', $appointment_date);
 $today = new DateTime(date('Y-m-d'));
 
-if (!$selectedDate || $selectedDate < $today) {
+if (!$selectedDate || $selectedDate->format('Y-m-d') !== $appointment_date) {
+    jsonError("Tarih geçersiz");
+}
+
+if ($selectedDate < $today) {
     jsonError("Geçmiş tarih seçilemez");
 }
 
@@ -121,6 +160,32 @@ if (!$stmt->fetch()) {
 
 /*
 ========================
+DUPLICATE CHECK
+Aynı telefon, aynı hizmet, aynı tarih ve aynı saat için tekrar kayıt engellenir.
+========================
+*/
+$stmt = $pdo->prepare("
+    SELECT COUNT(*)
+    FROM appointments
+    WHERE phone = ?
+      AND service_id = ?
+      AND appointment_date = ?
+      AND appointment_time = ?
+      AND status != 'cancelled'
+");
+$stmt->execute([
+    $phone,
+    $service_id,
+    $appointment_date,
+    $appointment_time
+]);
+
+if ((int)$stmt->fetchColumn() > 0) {
+    jsonError("Bu randevu talebi zaten oluşturulmuş görünüyor.");
+}
+
+/*
+========================
 INSERT
 ========================
 */
@@ -137,6 +202,8 @@ try {
             message,
             status,
             ip_address,
+            kvkk_consent,
+            kvkk_consent_at,
             created_at
         )
         VALUES
@@ -150,22 +217,26 @@ try {
             :message,
             'pending',
             :ip_address,
+            1,
+            NOW(),
             NOW()
         )
     ");
 
     $stmt->execute([
-        ':full_name' => $full_name,
-        ':phone' => $phone,
-        ':email' => $email ?: null,
-        ':service_id' => $service_id,
+        ':full_name'        => $full_name,
+        ':phone'            => $phone,
+        ':email'            => $email ?: null,
+        ':service_id'       => $service_id,
         ':appointment_date' => $appointment_date,
         ':appointment_time' => $appointment_time,
-        ':message' => $message,
-        ':ip_address' => $ipAddress
+        ':message'          => $message ?: null,
+        ':ip_address'       => $ipAddress
     ]);
 
-    jsonSuccess(null, "Randevu oluşturuldu");
+    jsonSuccess([
+        'id' => (int)$pdo->lastInsertId()
+    ], "Randevu oluşturuldu");
 
 } catch (Exception $e) {
     jsonError("Randevu oluşturulurken bir hata oluştu", 500);

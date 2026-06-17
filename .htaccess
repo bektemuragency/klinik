@@ -5,8 +5,13 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
-# Config ve include dosyalarına direkt erişimi kapat
-RedirectMatch 403 ^/klinikcms/includes/.*
+# Tehlikeli yedek / dump / log dosyalarını kapat
+<FilesMatch "\.(env|ini|log|sql|bak|zip|tar|gz|7z|old|dist|example)$">
+    Require all denied
+</FilesMatch>
+
+# Config / include / sistem klasörlerine direkt erişimi kapat
+RedirectMatch 403 ^/(klinikcms/)?(includes|vendor|\.git|backup|database|logs)(/.*)?$
 
 # PHP hata çıktısını kapat
 php_flag display_errors Off
@@ -16,4 +21,5 @@ php_flag display_errors Off
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>

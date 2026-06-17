@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/admin_guard.php';
+require_once __DIR__ . '/../../includes/activity_log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Geçersiz istek metodu", 405);
@@ -84,5 +85,25 @@ $stmt->execute([
     $is_active,
     $sort_order
 ]);
+
+$serviceId = (int)$pdo->lastInsertId();
+
+logActivity(
+    $pdo,
+    'service_created',
+    'service',
+    $serviceId,
+    null,
+    [
+        'id' => $serviceId,
+        'title' => $title,
+        'short_desc' => $short_desc,
+        'content' => $content,
+        'slug' => $slug,
+        'image_path' => $image_path,
+        'is_active' => $is_active,
+        'sort_order' => $sort_order
+    ]
+);
 
 jsonSuccess(null, "Hizmet başarıyla eklendi");

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/response.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/admin_guard.php';
+require_once __DIR__ . '/../../includes/activity_log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError("Geçersiz istek metodu", 405);
@@ -27,6 +28,24 @@ VALIDATION
 */
 if (!$id || !$name) {
     jsonError("Eksik veri");
+}
+
+/*
+====================
+OLD DATA
+====================
+*/
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM doctors
+    WHERE id = ?
+    LIMIT 1
+");
+$stmt->execute([$id]);
+$oldDoctor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$oldDoctor) {
+    jsonError("Doktor bulunamadı", 404);
 }
 
 /*
@@ -80,5 +99,28 @@ $sql .= " WHERE id = :id";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
+
+/*
+====================
+NEW DATA
+====================
+*/
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM doctors
+    WHERE id = ?
+    LIMIT 1
+");
+$stmt->execute([$id]);
+$newDoctor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+logActivity(
+    $pdo,
+    'doctor_updated',
+    'doctor',
+    $id,
+    $oldDoctor,
+    $newDoctor
+);
 
 jsonSuccess(null, "Doktor güncellendi");
